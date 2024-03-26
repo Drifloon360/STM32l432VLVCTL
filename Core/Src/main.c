@@ -68,6 +68,7 @@ void togglePin(pin *PinOut,  CAN_TxHeaderTypeDef *TxHeader, uint8_t TxData[8], u
 /* USER CODE BEGIN 0 */
 uint8_t DataInFlag = RESET;
 uint8_t BadCharFlag = RESET;
+volatile uint8_t stateTxTime = RESET;
 
 //CAN MSG Buffers
 CAN_TxHeaderTypeDef TxHeader;
@@ -79,6 +80,9 @@ uint8_t TxData[8]  = {0};
 uint8_t RxData[8];
 
 uint8_t ProcBuffer[8];
+uint8_t pinStates[8] = { 0 };
+
+uint16_t timCount = 0;
 
 /* USER CODE END 0 */
 
@@ -121,7 +125,7 @@ int main(void)
   HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
 
   //Set Tx Header Arbitration and Control fields
-  TxHeader.DLC = 2;  //only sending one number representing id of valve toggled
+  TxHeader.DLC = 8; //only sending one number representing id of valve toggled
   TxHeader.ExtId = 0;
   TxHeader.IDE = CAN_ID_STD;
   TxHeader.RTR = CAN_RTR_DATA;
@@ -137,6 +141,8 @@ int main(void)
   pin pin6;
   pin pin7;
   pin pin8;
+  pin pin9;
+  pin pin10;
 
   pin1.pinMode = RESET;
   pin1.pinId = 1;
@@ -148,6 +154,7 @@ int main(void)
   pin2.pinReg = GPIOA;
   pin2.pinNo = GPIO_PIN_10;
 
+  // currently, pin 3 and 4 are the main valves
   pin3.pinMode = RESET;
   pin3.pinId = 3;
   pin3.pinReg = GPIOB;
@@ -178,7 +185,18 @@ int main(void)
   pin8.pinReg = GPIOA;	//Still GPIOB
   pin8.pinNo = GPIO_PIN_1;// Was GPIO_PIN_5
 
+  pin9.pinMode = RESET;
+  pin9.pinId = 9;
+  pin9.pinReg = GPIOA;
+  pin9.pinNo = GPIO_PIN_6;
+
+  pin10.pinMode = RESET;
+  pin10.pinId = 10;
+  pin10.pinReg = GPIOA;
+  pin10.pinNo = GPIO_PIN_7;
+
   pin *pinActive = &pin1;
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -189,29 +207,65 @@ int main(void)
 	  if(DataInFlag){
 		  for( uint8_t i = 0; i< 8; i++){
 			  switch (ProcBuffer[i]){
-			  case 1:
+			  case '1':
 				  pinActive = &pin1;
+				  pinStates[0] ^= (1U << 0U);
 				  break;
-			  case 2:
+			  case '2':
 				  pinActive = &pin2;
+				  pinStates[0] ^= (1U << 1U);
 				  break;
-			  case 3:
+			  case '3':
 				  pinActive = &pin3;
+				  pinStates[1] ^= 1;
 				  break;
-			  case 4:
+			  case '4':
 				  pinActive = &pin4;
+				  pinStates[2] ^= 1;
 				  break;
-			  case 5:
+			  case '5':
 				  pinActive = &pin5;
+				  pinStates[3] ^= 1;
 				  break;
-			  case 6:
+			  case '6':
 				  pinActive = &pin6;
+				  pinStates[4] ^= 1;
 				  break;
-			  case 7:
+			  case '7':
 				  pinActive = &pin7;
+				  pinStates[5] ^= 1;
 				  break;
-			  case 8:
+			  case '8':
 				  pinActive = &pin8;
+				  pinStates[6] ^= 1;
+				  HAL_GPIO_WritePin(pin8.pinReg, pin8.pinNo, pinStates[6]);
+				  BadCharFlag = SET;
+				  break;
+			  case '9':
+				  pinActive = &pin9;
+				  pinStates[7] ^= 1;
+				  HAL_GPIO_WritePin(pin9.pinReg, pin9.pinNo, pinStates[7]);
+				  BadCharFlag = SET;
+			  // new commands - nf 11/16
+			  case 'a':
+				  // close mainvalves
+				  pinStates[1] = 0;
+				  pinStates[2] = 0;
+				  HAL_GPIO_WritePin(pin3.pinReg, pin3.pinNo, 0);
+				  HAL_GPIO_WritePin(pin4.pinReg, pin4.pinNo, 0);
+				  BadCharFlag = SET;
+				  break;
+			  case 'm':
+				  // open main valves at same time (discussed with rohin)
+				  pinStates[1] = 1;
+				  pinStates[2] = 1;
+				  HAL_GPIO_WritePin(pin3.pinReg, pin3.pinNo, 1);
+				  HAL_GPIO_WritePin(pin4.pinReg, pin4.pinNo, 1);
+				  BadCharFlag = SET;
+				  break;
+			  case 'i':
+				  // light igniter
+				  //pinActive = &igniterPin;
 				  break;
 			  default:
 				  BadCharFlag = SET;
@@ -225,9 +279,27 @@ int main(void)
 
 		  }
 		  HAL_Delay(2);
+
 		  DataInFlag = RESET;
 
 	  }
+
+
+      if (stateTxTime == SET) {
+		static int count = 0;
+		if (++count >= 100) {
+
+			HAL_CAN_AddTxMessage(&hcan1, &TxHeader, pinStates, &TxMailbox);
+			count = 0;
+
+		}
+		stateTxTime = RESET;
+      }
+
+//      if (timCount > 60000) {
+//    	  NVIC_SystemReset();
+//      }
+
 
 
     /* USER CODE END WHILE */
@@ -403,13 +475,14 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5
-                          |GPIO_PIN_6|GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10, GPIO_PIN_RESET);
+                          |GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9
+                          |GPIO_PIN_10, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0|GPIO_PIN_1|LD3_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PA1 PA3 PA4 */
-  GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_3|GPIO_PIN_4;
+  /*Configure GPIO pins : PA1 PA3 PA4 PA7 */
+  GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_7;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -443,6 +516,15 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_SYSTICK_Callback(void) {
+
+		stateTxTime = SET;
+//		timCount++;
+
+
+}
+
+
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1) {
 
 	HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &RxHeader, RxData);
@@ -460,9 +542,9 @@ void togglePin(pin *PinOut,  CAN_TxHeaderTypeDef *TxHeader, uint8_t TxData[8], u
 	else {
 		HAL_GPIO_WritePin(PinOut->pinReg, PinOut->pinNo, RESET);
 	}
-	TxData[0] = PinOut->pinId;
-	TxData[1] = PinOut->pinMode;
-	HAL_CAN_AddTxMessage(&hcan1, TxHeader, TxData, TxMailbox);
+//	TxData[0] = PinOut->pinId;
+//	TxData[1] = PinOut->pinMode;
+//	HAL_CAN_AddTxMessage(&hcan1, TxHeader, TxData, TxMailbox);
 	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);
 
 }
