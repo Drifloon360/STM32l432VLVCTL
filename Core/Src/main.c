@@ -133,67 +133,16 @@ int main(void)
   TxHeader.TransmitGlobalTime = DISABLE;
 
   //Set up pin typedefs
-  pin pin1;
-  pin pin2;
-  pin pin3;
-  pin pin4;
-  pin pin5;
-  pin pin6;
-  pin pin7;
-  pin pin8;
-  pin pin9;
-  pin pin10;
-
-  pin1.pinMode = RESET;
-  pin1.pinId = 1;
-  pin1.pinReg = GPIOA;
-  pin1.pinNo = GPIO_PIN_9;
-
-  pin2.pinMode = RESET;
-  pin2.pinId = 2;
-  pin2.pinReg = GPIOA;
-  pin2.pinNo = GPIO_PIN_10;
-
-  // currently, pin 3 and 4 are the main valves
-  pin3.pinMode = RESET;
-  pin3.pinId = 3;
-  pin3.pinReg = GPIOB;
-  pin3.pinNo = GPIO_PIN_0;
-
-  pin4.pinMode = RESET;
-  pin4.pinId = 4;
-  pin4.pinReg = GPIOA; //Was GPIOB
-
-  pin4.pinNo = GPIO_PIN_5; //Was GPIO_PIN_7
-  pin5.pinMode = RESET;
-  pin5.pinId = 5;
-  pin5.pinReg = GPIOA; //Was GPIOB
-  pin5.pinNo = GPIO_PIN_4; //Was GPIO_PIN_6
-
-  pin6.pinMode = RESET;
-  pin6.pinId = 6;
-  pin6.pinReg = GPIOB;
-  pin6.pinNo = GPIO_PIN_1;
-
-  pin7.pinMode = RESET;
-  pin7.pinId = 7;
-  pin7.pinReg = GPIOA;
-  pin7.pinNo = GPIO_PIN_8;
-
-  pin8.pinMode = RESET;
-  pin8.pinId = 8;
-  pin8.pinReg = GPIOA;	//Still GPIOB
-  pin8.pinNo = GPIO_PIN_1;// Was GPIO_PIN_5
-
-  pin9.pinMode = RESET;
-  pin9.pinId = 9;
-  pin9.pinReg = GPIOA;
-  pin9.pinNo = GPIO_PIN_6;
-
-  pin10.pinMode = RESET;
-  pin10.pinId = 10;
-  pin10.pinReg = GPIOA;
-  pin10.pinNo = GPIO_PIN_7;
+  pin pin1  = {RESET,  1, MOS_G01_GPIO_Port, MOS_G01_Pin};
+  pin pin2  = {RESET,  2, MOS_G02_GPIO_Port, MOS_G02_Pin};
+  pin pin3  = {RESET,  3, MOS_G03_GPIO_Port, MOS_G03_Pin};
+  pin pin4  = {RESET,  4, MOS_G04_GPIO_Port, MOS_G04_Pin};
+  pin pin5  = {RESET,  5, MOS_G05_GPIO_Port, MOS_G05_Pin};
+  pin pin6  = {RESET,  6, MOS_G06_GPIO_Port, MOS_G06_Pin};
+  pin pin7  = {RESET,  7, MOS_G07_GPIO_Port, MOS_G07_Pin};
+  pin pin8  = {RESET,  8, MOS_G08_GPIO_Port, MOS_G08_Pin};
+  pin pin9  = {RESET,  9, MOS_G09_GPIO_Port, MOS_G09_Pin};
+  pin pin10 = {RESET, 10, MOS_G10_GPIO_Port, MOS_G10_Pin};
 
   pin *pinActive = &pin1;
 
@@ -474,42 +423,30 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5
-                          |GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9
-                          |GPIO_PIN_10, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, MOS_G10_Pin|MOS_G09_Pin|MOS_G08_Pin|MOS_G07_Pin
+                          |MOS_G06_Pin|MOS_G05_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0|GPIO_PIN_1|LD3_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, MOS_G01_Pin|MOS_G04_Pin|LD3_Pin|MOS_G03_Pin
+                          |MOS_G02_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PA1 PA3 PA4 PA7 */
-  GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_7;
+  /*Configure GPIO pins : MOS_G10_Pin MOS_G09_Pin MOS_G08_Pin MOS_G07_Pin
+                           MOS_G06_Pin MOS_G05_Pin */
+  GPIO_InitStruct.Pin = MOS_G10_Pin|MOS_G09_Pin|MOS_G08_Pin|MOS_G07_Pin
+                          |MOS_G06_Pin|MOS_G05_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PA5 PA6 PA8 PA9
-                           PA10 */
-  GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_8|GPIO_PIN_9
-                          |GPIO_PIN_10;
+  /*Configure GPIO pins : MOS_G01_Pin MOS_G04_Pin LD3_Pin MOS_G03_Pin
+                           MOS_G02_Pin */
+  GPIO_InitStruct.Pin = MOS_G01_Pin|MOS_G04_Pin|LD3_Pin|MOS_G03_Pin
+                          |MOS_G02_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PB0 PB1 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : LD3_Pin */
-  GPIO_InitStruct.Pin = LD3_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LD3_GPIO_Port, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

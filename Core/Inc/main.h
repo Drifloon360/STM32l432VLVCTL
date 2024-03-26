@@ -61,6 +61,22 @@ void Error_Handler(void);
 #define MCO_GPIO_Port GPIOA
 #define VCP_TX_Pin GPIO_PIN_2
 #define VCP_TX_GPIO_Port GPIOA
+#define MOS_G10_Pin GPIO_PIN_3
+#define MOS_G10_GPIO_Port GPIOA
+#define MOS_G09_Pin GPIO_PIN_4
+#define MOS_G09_GPIO_Port GPIOA
+#define MOS_G08_Pin GPIO_PIN_5
+#define MOS_G08_GPIO_Port GPIOA
+#define MOS_G07_Pin GPIO_PIN_6
+#define MOS_G07_GPIO_Port GPIOA
+#define MOS_G06_Pin GPIO_PIN_7
+#define MOS_G06_GPIO_Port GPIOA
+#define MOS_G01_Pin GPIO_PIN_0
+#define MOS_G01_GPIO_Port GPIOB
+#define MOS_G04_Pin GPIO_PIN_1
+#define MOS_G04_GPIO_Port GPIOB
+#define MOS_G05_Pin GPIO_PIN_8
+#define MOS_G05_GPIO_Port GPIOA
 #define SWDIO_Pin GPIO_PIN_13
 #define SWDIO_GPIO_Port GPIOA
 #define SWCLK_Pin GPIO_PIN_14
@@ -69,6 +85,10 @@ void Error_Handler(void);
 #define VCP_RX_GPIO_Port GPIOA
 #define LD3_Pin GPIO_PIN_3
 #define LD3_GPIO_Port GPIOB
+#define MOS_G03_Pin GPIO_PIN_6
+#define MOS_G03_GPIO_Port GPIOB
+#define MOS_G02_Pin GPIO_PIN_7
+#define MOS_G02_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
