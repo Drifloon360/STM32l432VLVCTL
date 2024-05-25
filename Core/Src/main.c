@@ -195,26 +195,27 @@ int main(void)
 				  pinStates[7] ^= 1;
 				  HAL_GPIO_WritePin(pin9.pinReg, pin9.pinNo, pinStates[7]);
 				  BadCharFlag = SET;
+				  break;
 			  // new commands - nf 11/16
 			  case 'a':
 				  // close mainvalves
-				  pinStates[1] = 0;
-				  pinStates[2] = 0;
-				  HAL_GPIO_WritePin(pin3.pinReg, pin3.pinNo, 0);
-				  HAL_GPIO_WritePin(pin4.pinReg, pin4.pinNo, 0);
+				  pinStates[6] = 0;
+				  pinStates[7] = 0;
+				  HAL_GPIO_WritePin(pin8.pinReg, pin8.pinNo, 0);
+				  HAL_GPIO_WritePin(pin9.pinReg, pin9.pinNo, 0);
 				  BadCharFlag = SET;
 				  break;
 			  case 'm':
 				  // open main valves at same time (discussed with rohin)
-				  pinStates[1] = 1;
-				  pinStates[2] = 1;
-				  HAL_GPIO_WritePin(pin3.pinReg, pin3.pinNo, 1);
-				  HAL_GPIO_WritePin(pin4.pinReg, pin4.pinNo, 1);
+				  pinStates[6] = 1;
+				  pinStates[7] = 1;
+				  HAL_GPIO_WritePin(pin8.pinReg, pin8.pinNo, 1);
+				  HAL_GPIO_WritePin(pin9.pinReg, pin9.pinNo, 1);
 				  BadCharFlag = SET;
 				  break;
 			  case 'i':
 				  // light igniter
-				  //pinActive = &igniterPin;
+				  pinActive = &pin10; //igniterPin
 				  break;
 			  default:
 				  BadCharFlag = SET;
