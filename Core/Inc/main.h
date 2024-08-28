@@ -65,10 +65,10 @@ void Error_Handler(void);
 #define MOS_G10_GPIO_Port GPIOA
 #define MOS_G09_Pin GPIO_PIN_4
 #define MOS_G09_GPIO_Port GPIOA
-#define MOS_G08_Pin GPIO_PIN_5
-#define MOS_G08_GPIO_Port GPIOA
-#define MOS_G07_Pin GPIO_PIN_6
+#define MOS_G07_Pin GPIO_PIN_5
 #define MOS_G07_GPIO_Port GPIOA
+#define MOS_G08_Pin GPIO_PIN_6
+#define MOS_G08_GPIO_Port GPIOA
 #define MOS_G06_Pin GPIO_PIN_7
 #define MOS_G06_GPIO_Port GPIOA
 #define MOS_G01_Pin GPIO_PIN_0

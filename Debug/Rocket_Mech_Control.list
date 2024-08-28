@@ -37,11 +37,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_macro  0001fef3  00000000  00000000  0001484a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   0000c2ce  00000000  00000000  0003473d  2**0
+ 17 .debug_line   0000c2cf  00000000  00000000  0003473d  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000c1595  00000000  00000000  00040a0b  2**0
+ 18 .debug_str    000c1595  00000000  00000000  00040a0c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  00101fa0  2**0
+ 19 .comment      00000043  00000000  00000000  00101fa1  2**0
                   CONTENTS, READONLY
  20 .debug_frame  00002a3c  00000000  00000000  00101fe4  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -1274,7 +1274,7 @@ static void MX_GPIO_Init(void)
  8000b00:	683b      	ldr	r3, [r7, #0]
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, MOS_G10_Pin|MOS_G09_Pin|MOS_G08_Pin|MOS_G07_Pin
+  HAL_GPIO_WritePin(GPIOA, MOS_G10_Pin|MOS_G09_Pin|MOS_G07_Pin|MOS_G08_Pin
  8000b02:	2200      	movs	r2, #0
  8000b04:	f44f 71fc 	mov.w	r1, #504	@ 0x1f8
  8000b08:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
@@ -1289,9 +1289,9 @@ static void MX_GPIO_Init(void)
  8000b16:	f001 fb47 	bl	80021a8 <HAL_GPIO_WritePin>
                           |MOS_G02_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : MOS_G10_Pin MOS_G09_Pin MOS_G08_Pin MOS_G07_Pin
+  /*Configure GPIO pins : MOS_G10_Pin MOS_G09_Pin MOS_G07_Pin MOS_G08_Pin
                            MOS_G06_Pin MOS_G05_Pin */
-  GPIO_InitStruct.Pin = MOS_G10_Pin|MOS_G09_Pin|MOS_G08_Pin|MOS_G07_Pin
+  GPIO_InitStruct.Pin = MOS_G10_Pin|MOS_G09_Pin|MOS_G07_Pin|MOS_G08_Pin
  8000b1a:	f44f 73fc 	mov.w	r3, #504	@ 0x1f8
  8000b1e:	60fb      	str	r3, [r7, #12]
                           |MOS_G06_Pin|MOS_G05_Pin;
@@ -1500,6 +1500,7 @@ void HAL_MspInit(void)
  8000c38:	b480      	push	{r7}
  8000c3a:	b083      	sub	sp, #12
  8000c3c:	af00      	add	r7, sp, #0
+
   /* USER CODE BEGIN MspInit 0 */
 
   /* USER CODE END MspInit 0 */

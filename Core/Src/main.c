@@ -92,6 +92,7 @@ uint16_t timCount = 0;
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -424,16 +425,16 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, MOS_G10_Pin|MOS_G09_Pin|MOS_G08_Pin|MOS_G07_Pin
+  HAL_GPIO_WritePin(GPIOA, MOS_G10_Pin|MOS_G09_Pin|MOS_G07_Pin|MOS_G08_Pin
                           |MOS_G06_Pin|MOS_G05_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, MOS_G01_Pin|MOS_G04_Pin|LD3_Pin|MOS_G03_Pin
                           |MOS_G02_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : MOS_G10_Pin MOS_G09_Pin MOS_G08_Pin MOS_G07_Pin
+  /*Configure GPIO pins : MOS_G10_Pin MOS_G09_Pin MOS_G07_Pin MOS_G08_Pin
                            MOS_G06_Pin MOS_G05_Pin */
-  GPIO_InitStruct.Pin = MOS_G10_Pin|MOS_G09_Pin|MOS_G08_Pin|MOS_G07_Pin
+  GPIO_InitStruct.Pin = MOS_G10_Pin|MOS_G09_Pin|MOS_G07_Pin|MOS_G08_Pin
                           |MOS_G06_Pin|MOS_G05_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
